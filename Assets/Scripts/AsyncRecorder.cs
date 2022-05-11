@@ -20,8 +20,8 @@ public class AsyncRecorder : MonoBehaviour
             if (_recordingTimer >= recordingInterval)
             {
                 _recording.timeStamps.Add(_recordingTimer);
-                _recording.PositionDeltas.Add(transform.position);
-                _recording.RotationDeltas.Add(transform.rotation);
+                _recording.positionDeltas.Add(transform.position);
+                _recording.rotationDeltas.Add(transform.rotation);
             }
 
             _recordingTimer += Time.deltaTime;
@@ -31,8 +31,8 @@ public class AsyncRecorder : MonoBehaviour
     public void StopAndSaveRecording()
     {
         _recording.timeStamps.Add(_recordingTimer);
-        _recording.PositionDeltas.Add(transform.position);
-        _recording.RotationDeltas.Add(transform.rotation);
+        _recording.positionDeltas.Add(transform.position);
+        _recording.rotationDeltas.Add(transform.rotation);
         _isRecording = false;
 
         JsonUtility.ToJson(_recording).SaveInPLayerPrefs();
@@ -42,8 +42,8 @@ public class AsyncRecorder : MonoBehaviour
     private void StartRecording()
     {
         _recording = new AsyncRecording();
-        _recording.PositionDeltas = new List<Vector3>();
-        _recording.RotationDeltas = new List<Quaternion>();
+        _recording.positionDeltas = new List<Vector3>();
+        _recording.rotationDeltas = new List<Quaternion>();
         _recording.timeStamps = new List<float>();
 
         _isRecording = true;
@@ -64,38 +64,17 @@ public class AsyncRecorder : MonoBehaviour
 }
 
 [Serializable]
-public struct AsyncRecording: IEquatable<AsyncRecording>
+public struct AsyncRecording : IEquatable<AsyncRecording>
 {
-    private List<Vector3> _positionDeltas;
-
-    public List<Vector3> PositionDeltas
-    {
-        set => _positionDeltas = value;
-        get => _positionDeltas;
-    }
-
-    private List<Quaternion> _rotationDeltas;
-
-    public List<Quaternion> RotationDeltas
-    {
-        set => _rotationDeltas = value;
-        get => _rotationDeltas;
-    }
+    public List<Vector3> positionDeltas;
+    
+    public List<Quaternion> rotationDeltas;
 
     public List<float> timeStamps;
 
     public bool Equals(AsyncRecording other)
     {
-        return Equals(_positionDeltas, other._positionDeltas) && Equals(_rotationDeltas, other._rotationDeltas) && Equals(timeStamps, other.timeStamps);
-    }
-
-    public override bool Equals(object obj)
-    {
-        return obj is AsyncRecording other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(_positionDeltas, _rotationDeltas, timeStamps);
+        return Equals(positionDeltas, other.positionDeltas) && Equals(rotationDeltas, other.rotationDeltas) &&
+               Equals(timeStamps, other.timeStamps);
     }
 }

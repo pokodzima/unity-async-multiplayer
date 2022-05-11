@@ -60,7 +60,7 @@ public class AsyncGhost : MonoBehaviour
         
         for (int i = 0; i < recording.timeStamps.Count; i++)
         {
-            AddKeys(recording.timeStamps[i], recording.PositionDeltas[i], recording.RotationDeltas[i]);
+            AddKeys(recording.timeStamps[i], recording.positionDeltas[i], recording.rotationDeltas[i]);
         }
 
         _timeOfRecording = recording.timeStamps.Last();

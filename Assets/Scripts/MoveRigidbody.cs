@@ -5,14 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class MoveRigidbody : MonoBehaviour
 {
-    public float power;
+    [SerializeField] private float power;
     private Rigidbody _rb;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
     }
-    
+
     void Update()
     {
         var horizontal = Input.GetAxis("Horizontal");

@@ -5,49 +5,43 @@ using UnityEngine;
 
 public class AsyncGhost : MonoBehaviour
 {
-    private float timeOfRecording;
+    private float _timeOfRecording;
 
-    private bool isPlaying;
+    private bool _isPlaying;
 
-    private AnimationCurve posXCurve;
-    private AnimationCurve posYCurve;
-    private AnimationCurve posZCurve;
+    private AnimationCurve _posXCurve;
+    private AnimationCurve _posYCurve;
+    private AnimationCurve _posZCurve;
 
-    private AnimationCurve rotXCurve;
-    private AnimationCurve rotYCurve;
-    private AnimationCurve rotZCurve;
-    private AnimationCurve rotWCurve;
+    private AnimationCurve _rotXCurve;
+    private AnimationCurve _rotYCurve;
+    private AnimationCurve _rotZCurve;
+    private AnimationCurve _rotWCurve;
     
-    private float playingTime;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
+    private float _playingTime;
+    
     void Update()
     {
-        if (isPlaying)
+        if (_isPlaying)
         {
             var pos = new Vector3();
-            pos.x = posXCurve.Evaluate(playingTime);
-            pos.y = posYCurve.Evaluate(playingTime);
-            pos.z = posZCurve.Evaluate(playingTime);
+            pos.x = _posXCurve.Evaluate(_playingTime);
+            pos.y = _posYCurve.Evaluate(_playingTime);
+            pos.z = _posZCurve.Evaluate(_playingTime);
 
             var rot = new Quaternion();
-            rot.x = rotXCurve.Evaluate(playingTime);
-            rot.y = rotYCurve.Evaluate(playingTime);
-            rot.z = rotZCurve.Evaluate(playingTime);
-            rot.w = rotWCurve.Evaluate(playingTime);
+            rot.x = _rotXCurve.Evaluate(_playingTime);
+            rot.y = _rotYCurve.Evaluate(_playingTime);
+            rot.z = _rotZCurve.Evaluate(_playingTime);
+            rot.w = _rotWCurve.Evaluate(_playingTime);
 
             transform.position = pos;
             transform.rotation = rot;
-            playingTime += Time.deltaTime;
+            _playingTime += Time.deltaTime;
 
-            if (playingTime >= timeOfRecording)
+            if (_playingTime >= _timeOfRecording)
             {
-                isPlaying = false;
+                _isPlaying = false;
                 gameObject.SetActive(false);
             }
         }
@@ -55,35 +49,35 @@ public class AsyncGhost : MonoBehaviour
 
     public void InitializeGhost(AsyncRecording recording)
     {
-        posXCurve = new AnimationCurve();
-        posYCurve = new AnimationCurve();
-        posZCurve = new AnimationCurve();
+        _posXCurve = new AnimationCurve();
+        _posYCurve = new AnimationCurve();
+        _posZCurve = new AnimationCurve();
 
-        rotXCurve = new AnimationCurve();
-        rotYCurve = new AnimationCurve();
-        rotZCurve = new AnimationCurve();
-        rotWCurve = new AnimationCurve();
+        _rotXCurve = new AnimationCurve();
+        _rotYCurve = new AnimationCurve();
+        _rotZCurve = new AnimationCurve();
+        _rotWCurve = new AnimationCurve();
         
         for (int i = 0; i < recording.timeStamps.Count; i++)
         {
-            AddKeys(recording.timeStamps[i], recording.positionDeltas[i], recording.rotationDeltas[i]);
+            AddKeys(recording.timeStamps[i], recording.PositionDeltas[i], recording.RotationDeltas[i]);
         }
 
-        timeOfRecording = recording.timeStamps.Last();
-        playingTime = 0f;
+        _timeOfRecording = recording.timeStamps.Last();
+        _playingTime = 0f;
         
-        isPlaying = true;
+        _isPlaying = true;
     }
 
     private void AddKeys(float time, Vector3 pos, Quaternion rot)
     {
-        posXCurve.AddKey(time, pos.x);
-        posYCurve.AddKey(time, pos.y);
-        posZCurve.AddKey(time, pos.z);
+        _posXCurve.AddKey(time, pos.x);
+        _posYCurve.AddKey(time, pos.y);
+        _posZCurve.AddKey(time, pos.z);
 
-        rotXCurve.AddKey(time, rot.x);
-        rotYCurve.AddKey(time, rot.y);
-        rotZCurve.AddKey(time, rot.z);
-        rotWCurve.AddKey(time, rot.w);
+        _rotXCurve.AddKey(time, rot.x);
+        _rotYCurve.AddKey(time, rot.y);
+        _rotZCurve.AddKey(time, rot.z);
+        _rotWCurve.AddKey(time, rot.w);
     }
 }
